@@ -1,0 +1,18 @@
+Import-Module OperationsManager            
+New-SCOMManagementGroupConnection -ComputerName %SCOM_MGMT Server%
+$Servername = "%AgentName%"
+
+$administration = (Get-SCOMManagementGroup).GetAdministration();
+$agentManagedComputerType = [Microsoft.EnterpriseManagement.Administration.AgentManagedComputer];
+$genericListType = [System.Collections.Generic.List``1]
+$genericList = $genericListType.MakeGenericType($agentManagedComputerType)
+$agentList = new-object $genericList.FullName
+
+$agent = Get-SCOMAgent *$Servername*
+
+$agentList.Add($agent);
+
+$genericReadOnlyCollectionType = [System.Collections.ObjectModel.ReadOnlyCollection``1]
+$genericReadOnlyCollection = $genericReadOnlyCollectionType.MakeGenericType($agentManagedComputerType)
+$agentReadOnlyCollection = new-object $genericReadOnlyCollection.FullName @(,$agentList);    
+$administration.DeleteAgentManagedComputers($agentReadOnlyCollection);
