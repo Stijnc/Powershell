@@ -1,6 +1,12 @@
-Import-Module OperationsManager            
-New-SCOMManagementGroupConnection -ComputerName %SCOM_MGMT Server%
-$Servername = "%AgentName%"
+#requires -Version 3
+
+PARAM(
+  $ComputerName,
+  $AgentName
+)
+           
+New-SCOMManagementGroupConnection -ComputerName $ComputerName
+$Servername = $AgentName
 
 $administration = (Get-SCOMManagementGroup).GetAdministration();
 $agentManagedComputerType = [Microsoft.EnterpriseManagement.Administration.AgentManagedComputer];
